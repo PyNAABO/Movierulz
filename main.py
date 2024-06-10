@@ -1,8 +1,8 @@
 import os
-from get_LL import get_latest_link
-from scrape import scrape_movie_data
-from TG import send_message, send_photo_from_link
-from utils import read_data, read_movie_data, write_movie_data
+from MovieRulz.get_LL import get_latest_link
+from MovieRulz.scrape import scrape_movie_data
+from MovieRulz.TG import send_message, send_photo_from_link
+from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
