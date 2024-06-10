@@ -6,6 +6,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
     steps:
       - name: Checking out repo
         uses: actions/checkout@v3
