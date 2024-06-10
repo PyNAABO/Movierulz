@@ -21,7 +21,7 @@ jobs:
         run: pip install requests bs4
 
       - name: Running the Python script
-        run: python Selenium-Template.py
+        run: python main.py
 
       - name: Commit and Push The Results From Python Selenium Action
         run: |
