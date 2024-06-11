@@ -41,7 +41,7 @@ def get_latest_link():
         with open("data.json", "r") as f:
             link_data = json.load(f)
         link_data["link"] = latest_movierulz_link
-        with open("../Data/data.json", "w") as f:
+        with open("./Data/data.json", "w") as f:
             json.dump(link_data, f, indent=4)
         return latest_movierulz_link
     except Exception as e:
