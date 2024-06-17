@@ -1,4 +1,34 @@
 import requests
+from lxml import html
+
+
+def get_movie_details_IMDB(query):
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        }
+        params = {
+            "q": f"{str(query)} IMDB",
+        }
+        response = requests.get(
+            "https://www.google.com/search", params=params, headers=headers
+        )
+
+        tree = html.fromstring(response.content)
+
+        Links = []
+        elements = tree.xpath('//div[@class="yuRUbf"]/div/span/a')[:5]
+        for element in elements:
+            link = element.get("href").strip()
+            if "imdb" in link:
+                Links.append(link)
+
+        link = Links[0] if Links else None
+        print(link)
+        return link
+    except Exception as e:
+        print("Error fetching latest link:", e)
+        return None
 
 
 # Function to handle missing data gracefully
@@ -17,11 +47,12 @@ def convert_to_hours(minutes):
 
 
 # Function to get movie details by name
-def get_movie_details_TMDB(movie_name):
+def get_movie_details_TMDB(query):
     # TMDb API endpoints and authentication headers
     search_url = "https://api.themoviedb.org/3/search/movie"
     movie_url = "https://api.themoviedb.org/3/movie/{}"
 
+    movie_name = query.split("(")[0].strip()
     search_params = {
         "query": movie_name,
         "include_adult": "true",
@@ -36,12 +67,14 @@ def get_movie_details_TMDB(movie_name):
     # Step 1: Search for the movie by name
     response = requests.get(search_url, params=search_params, headers=headers)
 
+    # Initialize movie details variable
+    movie_details_TMDB = ""
+
     # Check if search request was successful
     if response.status_code == 200:
         search_results = response.json()
         if search_results["total_results"] > 0:
             movie_id = search_results["results"][0]["id"]
-            print(f"Found movie ID: {movie_id}")
 
             # Step 2: Retrieve detailed information about the movie using its ID
             movie_response = requests.get(
@@ -54,64 +87,64 @@ def get_movie_details_TMDB(movie_name):
             if movie_response.status_code == 200:
                 movie_details = movie_response.json()
 
-                # Format and print movie details
-                print(f"Title: {get_safe_value(movie_details, 'title')}")
-                print(
-                    f"Original Title: {get_safe_value(movie_details, 'original_title')}"
+                # Format movie details into a string
+                from_TMDB = f"https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}/"
+                IMDBLink = get_movie_details_IMDB(query)
+                if IMDBLink == from_TMDB:
+                    Checked = "✅"
+                else:
+                    Checked = "❌"
+                    movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
+                movie_details_TMDB += (
+                    f"Title [{Checked}]: {get_safe_value(movie_details, 'title')}\n"
                 )
-                print(f"Release Date: {get_safe_value(movie_details, 'release_date')}")
-                print(
-                    f"Runtime: {convert_to_hours(get_safe_value(movie_details, 'runtime'))}"
+                movie_details_TMDB += f"Original Title: {get_safe_value(movie_details, 'original_title')}\n"
+                movie_details_TMDB += (
+                    f"Release Date: {get_safe_value(movie_details, 'release_date')}\n"
                 )
-                print(
-                    f"Genres: {', '.join([genre['name'] for genre in movie_details['genres']])}"
+                movie_details_TMDB += f"Runtime: {convert_to_hours(get_safe_value(movie_details, 'runtime'))}\n"
+                movie_details_TMDB += f"Genres: {', '.join([genre['name'] for genre in movie_details['genres']])}\n"
+                movie_details_TMDB += (
+                    f"Overview: {get_safe_value(movie_details, 'overview')}\n"
                 )
-                print(f"Overview: {get_safe_value(movie_details, 'overview')}")
-                print(f"Tagline: {get_safe_value(movie_details, 'tagline')}")
-                print(
-                    f"IMDB ID: https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}"
+                movie_details_TMDB += (
+                    f"Tagline: {get_safe_value(movie_details, 'tagline')}\n"
                 )
-                print(f"Homepage: {get_safe_value(movie_details, 'homepage')}")
-                print(f"Popularity: {get_safe_value(movie_details, 'popularity')}")
-                print(f"Average Vote: {get_safe_value(movie_details, 'vote_average')}")
-                print(f"Vote Count: {get_safe_value(movie_details, 'vote_count')}")
-
-                # Additional details with error handling
-                print(f"Budget: ${get_safe_value(movie_details, 'budget')}")
-                print(f"Revenue: ${get_safe_value(movie_details, 'revenue')}")
-
-                # Production companies
-                production_companies = ", ".join(
-                    [
-                        company["name"]
-                        for company in movie_details["production_companies"]
-                    ]
+                movie_details_TMDB += f"IMDB ID: https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}\n"
+                movie_details_TMDB += (
+                    f"Homepage: {get_safe_value(movie_details, 'homepage')}\n"
                 )
-                print(f"Production Companies: {production_companies}")
-
-                # Production countries
-                production_countries = ", ".join(
-                    [
-                        country["name"]
-                        for country in movie_details["production_countries"]
-                    ]
+                movie_details_TMDB += (
+                    f"Popularity: {get_safe_value(movie_details, 'popularity')}\n"
                 )
-                print(f"Production Countries: {production_countries}")
-
-                # Spoken languages
-                spoken_languages = ", ".join(
-                    [lang["english_name"] for lang in movie_details["spoken_languages"]]
+                movie_details_TMDB += (
+                    f"Average Vote: {get_safe_value(movie_details, 'vote_average')}\n"
                 )
-                print(f"Spoken Languages: {spoken_languages}")
-
+                movie_details_TMDB += (
+                    f"Vote Count: {get_safe_value(movie_details, 'vote_count')}\n"
+                )
+                movie_details_TMDB += (
+                    f"Budget: ${get_safe_value(movie_details, 'budget')}\n"
+                )
+                movie_details_TMDB += (
+                    f"Revenue: ${get_safe_value(movie_details, 'revenue')}\n"
+                )
+                movie_details_TMDB += f"Production Companies: {', '.join([company['name'] for company in movie_details['production_companies']])}\n"
+                movie_details_TMDB += f"Production Countries: {', '.join([country['name'] for country in movie_details['production_countries']])}\n"
+                movie_details_TMDB += f"Spoken Languages: {', '.join([lang['english_name'] for lang in movie_details['spoken_languages']])}\n"
             else:
-                print(f"Failed to retrieve movie details: {movie_response.status_code}")
+                movie_details_TMDB += (
+                    f"Failed to retrieve movie details: {movie_response.status_code}\n"
+                )
         else:
-            print("No results found for the search query.")
+            movie_details_TMDB += "No results found for the search query.\n"
     else:
-        print(f"Search request failed: {response.status_code}")
+        movie_details_TMDB += f"Search request failed: {response.status_code}\n"
+
+    print(movie_details_TMDB)
+    return movie_details_TMDB
 
 
 if __name__ == "__main__":
     # Example usage:
-    get_movie_details_TMDB("The Family Star")
+    get_movie_details_TMDB("The Family Star (2024)")

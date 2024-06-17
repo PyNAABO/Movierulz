@@ -2,6 +2,7 @@ import os
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
 from MovieRulz.TG import send_message, send_photo_from_link
+from MovieRulz.movie_details import get_movie_details_TMDB
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
 bot_token = os.environ["BOT_TOKEN"]
@@ -21,8 +22,15 @@ if __name__ == "__main__":
         for title in titles:
             n += 1
             if title not in sent_titles:
+                MovieName = data[n][0]
+
+                # Refining name
+                MovieName = f"{MovieName.rsplit(')')[0]})"
+
+                # Getting Movie Details
+                MovieDetails = get_movie_details_TMDB(MovieName).strip()
                 send_photo_from_link(
-                    bot_token, chat_id, photo_link=data[n][1], caption=data[n][0]
+                    bot_token, chat_id, photo_link=data[n][1], caption=MovieDetails
                 )
                 write_movie_data((data[n][0], data[n][1]))
     except Exception as e:

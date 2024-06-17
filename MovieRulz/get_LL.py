@@ -38,7 +38,7 @@ def get_latest_link():
 
         latest_movierulz_link = movierulz_links[0] if movierulz_links else None
         latest_movierulz_link += "/quality/hdrip/"
-        with open("data.json", "r") as f:
+        with open("./Data/data.json", "r") as f:
             link_data = json.load(f)
         link_data["link"] = latest_movierulz_link
         with open("./Data/data.json", "w") as f:
