@@ -17,7 +17,7 @@ def convert_to_hours(minutes):
 
 
 # Function to get movie details by name
-def get_movie_details(movie_name):
+def get_movie_details_TMDB(movie_name):
     # TMDb API endpoints and authentication headers
     search_url = "https://api.themoviedb.org/3/search/movie"
     movie_url = "https://api.themoviedb.org/3/movie/{}"
@@ -114,4 +114,4 @@ def get_movie_details(movie_name):
 
 if __name__ == "__main__":
     # Example usage:
-    get_movie_details("The Family Star")
+    get_movie_details_TMDB("The Family Star")
