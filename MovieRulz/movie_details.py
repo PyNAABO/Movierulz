@@ -42,7 +42,7 @@ def get_details_from_site(url):
         ).get_text(strip=True)
 
         # Printing the extracted text
-        movie_info_from_site = f"{p2_text}\nOverview: {p3_text}"
+        movie_info_from_site = f"{p2_text}\n\nOverview: {p3_text}"
         return movie_info_from_site.strip()
     else:
         return "Error fetching the HTML content"
@@ -184,11 +184,11 @@ def get_movie_details_TMDB(query, url):
                     f"Failed to retrieve movie details: {movie_response.status_code}\n"
                 )
         else:
-            movie_details_TMDB += f"{IMDBLink}\n"
+            movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
             movie_details_TMDB += get_details_from_site(url)
             # movie_details_TMDB += "No results found for the search query.\n"
     else:
-        movie_details_TMDB += f"{IMDBLink}\n"
+        movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
         movie_details_TMDB += get_details_from_site(url)
         # movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 
