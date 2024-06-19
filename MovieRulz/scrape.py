@@ -10,7 +10,7 @@ def scrape_movie_data(url):
     - url (str): The URL of the webpage to scrape.
 
     Returns:
-    - list: A list of tuples containing movie titles and image URLs.
+    - list: A list of tuples containing movie titles, image URLs, and links.
     """
     # Fetch the HTML content of the webpage
     response = requests.get(url)
@@ -27,14 +27,20 @@ def scrape_movie_data(url):
 
     # Extract required information from each div element
     for div in film_divs:
-        # Extract movie title and image URL
+        # Extract movie title
         title = (
             div.find("p").text.strip().replace("Movie Watch Online Free", "").strip()
         )
+
+        # Extract image URL
         img_url = div.find("img")["src"]
 
+        # Extract link URL
+        link_url = div.find("a")["href"]
+
         # Append the extracted data to the list
-        movie_data.append((title, img_url))
+        movie_data.append((title, img_url, link_url))
+
     return movie_data
 
 

@@ -8,7 +8,6 @@ from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
 
-
 if __name__ == "__main__":
     try:
         MR_link = get_latest_link()
@@ -28,10 +27,11 @@ if __name__ == "__main__":
                 MovieName = f"{MovieName.rsplit(')')[0]})"
 
                 # Getting Movie Details
-                MovieDetails = get_movie_details_TMDB(MovieName).strip()
+                MovieLink = data[n][2]
+                MovieDetails = get_movie_details_TMDB(MovieName, MovieLink).strip()
                 send_photo_from_link(
                     bot_token, chat_id, photo_link=data[n][1], caption=MovieDetails
                 )
-                write_movie_data((data[n][0], data[n][1]))
+                write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
-        send_message(bot_token, chat_id, text=f"🔴🔴 Error Occured 🔴🔴:\n\n{e}")
+        send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")

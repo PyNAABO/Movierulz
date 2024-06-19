@@ -1,5 +1,51 @@
 import requests
 from lxml import html
+from bs4 import BeautifulSoup
+
+
+def get_details_from_site(url):
+    # Headers to mimic a real browser request
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+    }
+
+    # Sending a GET request to the webpage
+    response = requests.get(url, headers=headers)
+
+    # Checking if the request was successful
+    if response.status_code == 200:
+        # Parsing the HTML content
+        html_content = response.text
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        # Extracting the text from the specified <p> tags
+        p2_tag = soup.select_one("#post > div:nth-of-type(2) > p:nth-of-type(2)")
+        if p2_tag:
+            # Formatting the extracted content
+            content = p2_tag.get_text(separator="\n", strip=True)
+            lines = content.split("\n")
+
+            # Formatting lines to be in a single line with correct commas
+            formatted_lines = []
+            for line in lines:
+                if line.endswith(":"):
+                    formatted_lines.append(line)
+                else:
+                    formatted_lines[-1] += " " + line.strip()
+
+            p2_text = "\n".join(formatted_lines)
+        else:
+            p2_text = "Specified <p> tag not found"
+
+        p3_text = soup.select_one(
+            "#post > div:nth-of-type(2) > p:nth-of-type(3)"
+        ).get_text(strip=True)
+
+        # Printing the extracted text
+        movie_info_from_site = f"{p2_text}\nOverview: {p3_text}"
+        return movie_info_from_site.strip()
+    else:
+        return "Error fetching the HTML content"
 
 
 def get_IMDB_link(query):
@@ -47,7 +93,7 @@ def convert_to_hours(minutes):
 
 
 # Function to get movie details by name
-def get_movie_details_TMDB(query):
+def get_movie_details_TMDB(query, url):
     # TMDb API endpoints and authentication headers
     search_url = "https://api.themoviedb.org/3/search/movie"
     movie_url = "https://api.themoviedb.org/3/movie/{}"
@@ -139,10 +185,12 @@ def get_movie_details_TMDB(query):
                 )
         else:
             movie_details_TMDB += f"{IMDBLink}\n"
-            movie_details_TMDB += "No results found for the search query.\n"
+            movie_details_TMDB += get_details_from_site(url)
+            # movie_details_TMDB += "No results found for the search query.\n"
     else:
         movie_details_TMDB += f"{IMDBLink}\n"
-        movie_details_TMDB += f"Search request failed: {response.status_code}\n"
+        movie_details_TMDB += get_details_from_site(url)
+        # movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 
     print(movie_details_TMDB)
     return movie_details_TMDB
