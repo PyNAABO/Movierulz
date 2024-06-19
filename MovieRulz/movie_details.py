@@ -2,7 +2,7 @@ import requests
 from lxml import html
 
 
-def get_movie_details_IMDB(query):
+def get_IMDB_link(query):
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -86,10 +86,11 @@ def get_movie_details_TMDB(query):
             # Check if movie details request was successful
             if movie_response.status_code == 200:
                 movie_details = movie_response.json()
+                movie_details_TMDB += f"{query}\n"
 
                 # Format movie details into a string
                 from_TMDB = f"https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}/"
-                IMDBLink = get_movie_details_IMDB(query)
+                IMDBLink = get_IMDB_link(query)
                 if IMDBLink == from_TMDB:
                     Checked = "✅"
                 else:
