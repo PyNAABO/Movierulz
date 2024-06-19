@@ -69,7 +69,8 @@ def get_movie_details_TMDB(query):
 
     # Initialize movie details variable
     movie_details_TMDB = ""
-    movie_details_TMDB += f"{query}\n"
+    movie_details_TMDB += f"{query}\n\n"
+    IMDBLink = get_IMDB_link(query)
 
     # Check if search request was successful
     if response.status_code == 200:
@@ -90,7 +91,6 @@ def get_movie_details_TMDB(query):
 
                 # Format movie details into a string
                 from_TMDB = f"https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}/"
-                IMDBLink = get_IMDB_link(query)
                 if IMDBLink == from_TMDB:
                     Checked = "✅"
                 else:
@@ -138,8 +138,10 @@ def get_movie_details_TMDB(query):
                     f"Failed to retrieve movie details: {movie_response.status_code}\n"
                 )
         else:
+            movie_details_TMDB += f"{IMDBLink}\n"
             movie_details_TMDB += "No results found for the search query.\n"
     else:
+        movie_details_TMDB += f"{IMDBLink}\n"
         movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 
     print(movie_details_TMDB)
