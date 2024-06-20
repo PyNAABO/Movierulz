@@ -140,6 +140,9 @@ def get_movie_details_TMDB(query, url, driver):
                 from_TMDB = f"https://www.imdb.com/title/{get_safe_value(movie_details, 'imdb_id')}/"
                 if IMDBLink == from_TMDB:
                     Checked = "✅"
+                    get_IMDB_Screenshot(
+                        driver=driver, link=IMDBLink
+                    )  # Grabing SS from IMDB
                 else:
                     movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
                     get_IMDB_Screenshot(

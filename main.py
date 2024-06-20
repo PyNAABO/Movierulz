@@ -6,7 +6,6 @@ from MovieRulz.movie_details import get_movie_details_TMDB
 from MovieRulz.TG import (
     send_message,
     send_photo_from_link,
-    send_photos,
     send_photo_from_links,
 )
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data

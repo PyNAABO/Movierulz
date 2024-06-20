@@ -17,31 +17,6 @@ def send_photo_from_link(bot_token, chat_id, photo_link, caption=None):
     return response.json()
 
 
-def send_photos(bot_token, chat_id, photo_link, local_photo_path, captions=None):
-    url = f"https://api.telegram.org/bot{bot_token}/sendMediaGroup"
-    media = []
-
-    # Remote photo (from link)
-    remote_media_item = {"type": "photo", "media": photo_link}
-    if captions and len(captions) > 0:
-        remote_media_item["caption"] = captions[0]
-
-    media.append(remote_media_item)
-
-    # Local photo
-    with open(local_photo_path, "rb") as photo_file:
-        local_media_item = {"type": "photo", "media": ("photo.jpg", photo_file)}
-        if captions and len(captions) > 1:
-            local_media_item["caption"] = captions[1]
-
-        media.append(local_media_item)
-
-    params = {"chat_id": chat_id, "media": media}
-
-    response = requests.post(url, json=params)
-    return response.json()
-
-
 def send_photo_from_links(bot_token, chat_id, photo_links, captions=None):
     url = f"https://api.telegram.org/bot{bot_token}/sendMediaGroup"
     media = []
