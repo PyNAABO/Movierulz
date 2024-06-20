@@ -38,7 +38,8 @@ def main():
                 MovieLink = data[n][2]
                 MovieDetails, IMDBLink = get_movie_details_TMDB(
                     MovieName, MovieLink, driver
-                ).strip()
+                )
+                MovieDetails = MovieDetails.strip()
                 try:
                     # send_photos(
                     #     bot_token=bot_token,
