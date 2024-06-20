@@ -48,15 +48,16 @@ def main():
                     #     local_photo_path="./Data/IMDB_Screenshot.png",
                     #     captions=[MovieDetails],
                     # )
-                    send_photo_from_links(
-                        bot_token=bot_token,
-                        chat_id=chat_id,
-                        photo_links=[
-                            data[n][1],
-                            f"https://api.apiflash.com/v1/urltoimage?access_key=d83b2a288254441692f89c086674d90c&wait_until=page_loaded&url={IMDBLink}",
-                        ],
-                        captions=[MovieDetails],
-                    )
+                    # send_photo_from_links(
+                    #     bot_token=bot_token,
+                    #     chat_id=chat_id,
+                    #     photo_links=[
+                    #         data[n][1],
+                    #         f"https://api.apiflash.com/v1/urltoimage?access_key=d83b2a288254441692f89c086674d90c&wait_until=page_loaded&url={IMDBLink}",
+                    #     ],
+                    #     captions=[MovieDetails],
+                    # )
+                    a = 1 / 0
                 except Exception as e:
                     print("ERROR:", e)
                     send_photo_from_link(
