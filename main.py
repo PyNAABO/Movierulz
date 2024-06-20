@@ -1,7 +1,7 @@
 import os
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
-from MovieRulz.TG import send_message, send_photo_from_link
+from MovieRulz.TG import send_message, send_photo_from_links
 from MovieRulz.movie_details import get_movie_details_TMDB
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
@@ -30,8 +30,11 @@ def main():
                 # Getting Movie Details
                 MovieLink = data[n][2]
                 MovieDetails = get_movie_details_TMDB(MovieName, MovieLink).strip()
-                send_photo_from_link(
-                    bot_token, chat_id, photo_link=data[n][1], caption=MovieDetails
+                send_photo_from_links(
+                    bot_token=bot_token,
+                    chat_id=chat_id,
+                    photo_links=[data[n][1]],
+                    caption=MovieDetails,
                 )
                 write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
