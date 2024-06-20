@@ -1,6 +1,7 @@
 import requests
 from lxml import html
 from bs4 import BeautifulSoup
+from MovieRulz.get_SS import get_IMDB_Screenshot
 
 
 def get_details_from_site(url):
@@ -93,7 +94,7 @@ def convert_to_hours(minutes):
 
 
 # Function to get movie details by name
-def get_movie_details_TMDB(query, url):
+def get_movie_details_TMDB(query, url, driver):
     # TMDb API endpoints and authentication headers
     search_url = "https://api.themoviedb.org/3/search/movie"
     movie_url = "https://api.themoviedb.org/3/movie/{}"
@@ -141,6 +142,9 @@ def get_movie_details_TMDB(query, url):
                     Checked = "✅"
                 else:
                     movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
+                    get_IMDB_Screenshot(
+                        driver=driver, link=IMDBLink
+                    )  # Grabing SS from IMDB
                     movie_details_TMDB += get_details_from_site(url)
                     return movie_details_TMDB
 
@@ -187,10 +191,12 @@ def get_movie_details_TMDB(query, url):
                 )
         else:
             movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
+            get_IMDB_Screenshot(driver=driver, link=IMDBLink)  # Grabing SS from IMDB
             movie_details_TMDB += get_details_from_site(url)
             # movie_details_TMDB += "No results found for the search query.\n"
     else:
         movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
+        get_IMDB_Screenshot(driver=driver, link=IMDBLink)  # Grabing SS from IMDB
         movie_details_TMDB += get_details_from_site(url)
         # movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 

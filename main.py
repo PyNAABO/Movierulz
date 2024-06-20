@@ -1,8 +1,9 @@
 import os
+from MovieRulz.get_SS import get_driver
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
-from MovieRulz.TG import send_message, send_photo_from_link, send_photos
 from MovieRulz.movie_details import get_movie_details_TMDB
+from MovieRulz.TG import send_message, send_photo_from_link, send_photos
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
 bot_token = os.environ["BOT_TOKEN"]
@@ -10,6 +11,7 @@ chat_id = "976223233"
 
 
 def main():
+    driver = get_driver()
     try:
         MR_link = get_latest_link()
         if MR_link is None:
@@ -29,7 +31,9 @@ def main():
 
                 # Getting Movie Details
                 MovieLink = data[n][2]
-                MovieDetails = get_movie_details_TMDB(MovieName, MovieLink).strip()
+                MovieDetails = get_movie_details_TMDB(
+                    MovieName, MovieLink, driver
+                ).strip()
                 try:
                     send_photos(
                         bot_token=bot_token,
