@@ -1,6 +1,8 @@
 import io
+import os
 import time
 import subprocess
+import requests
 from datetime import datetime
 
 from PIL import Image
@@ -100,15 +102,58 @@ def git_commit_and_push():
         print(f"Error executing Git command: {e}")
 
 
+def send_request(link2send):
+    # API endpoint URL with parameters
+    url = "https://api.screenshotone.com/take"
+
+    # Parameters for the GET request
+    params = {
+        "access_key": "W00tYMV_ALeG8Q",
+        "url": link2send,
+        "full_page": "false",
+        "viewport_width": "1920",
+        "viewport_height": "1080",
+        "device_scale_factor": "1",
+        "format": "jpg",
+        "image_quality": "80",
+        "block_ads": "true",
+        "block_cookie_banners": "true",
+        "block_banners_by_heuristics": "false",
+        "block_trackers": "true",
+        "delay": "0",
+        "timeout": "60",
+    }
+
+    # HTTP method
+    method = "GET"
+
+    # Sending the HTTP request
+    response = requests.request(method, url, params=params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code != 200:
+        raise Exception(f"Request failed with status: {response.status_code}")
+
+    # Save the image to a file
+    file_path = os.path.join("Data", "IMDB_Screenshot.png")
+    with open(file_path, "wb") as f:
+        f.write(response.content)
+
+    print(f"Image saved successfully at {file_path}")
+
+
 def get_IMDB_Screenshot(driver, link):
-    driver.get(link)
+    try:
+        send_request(link2send=link)
+    except:
+        driver.get(link)
 
-    with open("./LOGS.txt", "a+") as f:
-        string = f"Screenshot Taken : {driver.title} : {str(datetime.now())}"
-        f.write(string + "\n")
+        with open("./LOGS.txt", "a+") as f:
+            string = f"Screenshot Taken : {driver.title} : {str(datetime.now())}"
+            f.write(string + "\n")
 
-    file_name = "./Data/IMDB_Screenshot.png"
-    capture_long_screenshot(driver=driver, url=link, output_file=file_name)
-    print("Screenshot Saved:", file_name)
+        file_name = "./Data/IMDB_Screenshot.png"
+        capture_long_screenshot(driver=driver, url=link, output_file=file_name)
+        print("Screenshot Saved:", file_name)
     git_commit_and_push()
     return file_name
