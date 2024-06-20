@@ -42,7 +42,8 @@ def main():
                         local_photo_path="./Data/IMDB_Screenshot.png",
                         captions=[MovieDetails],
                     )
-                except:
+                except Exception as e:
+                    print("ERROR:", e)
                     send_photo_from_link(
                         bot_token=bot_token,
                         chat_id=chat_id,

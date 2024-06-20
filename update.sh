@@ -25,25 +25,26 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Add all changes to the Git staging area, excluding files larger than 50MB
-echo "Checking for files over 50MB..."
-while IFS= read -r -d '' file; do
-    # Check if the file path contains 'venv' or 'NONI'; if so, skip processing
-    if [[ "$file" == *"/venv/"* || "$file" == *"/NONI/"* ]]; then
-        echo "Skipping folder: $file"
-        continue
-    fi
+# # Add all changes to the Git staging area, excluding files larger than 50MB
+# echo "Checking for files over 50MB..."
+# while IFS= read -r -d '' file; do
+#     # Check if the file path contains 'venv' or 'NONI'; if so, skip processing
+#     if [[ "$file" == *"/venv/"* || "$file" == *"/NONI/"* ]]; then
+#         echo "Skipping folder: $file"
+#         continue
+#     fi
     
-    check_file_size "$file"
-    if [ $? -eq 0 ]; then
-        echo "Adding file: $file"
-        git add "$file"
-    else
-        echo "$file" >> .gitignore
-    fi
-done < <(find . -type f -not \( -path "./venv/*" -o -path "./NONI/*" \) -print0)
+#     check_file_size "$file"
+#     if [ $? -eq 0 ]; then
+#         echo "Adding file: $file"
+#         git add "$file"
+#     else
+#         echo "$file" >> .gitignore
+#     fi
+# done < <(find . -type f -not \( -path "./venv/*" -o -path "./NONI/*" \) -print0)
 
 # Prompt user to continue
+git add .
 echo "Press Enter to continue..."
 read -r
 
