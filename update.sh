@@ -25,16 +25,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Add all changes to the Git staging area, excluding files larger than 50MB
-echo "checking for files over 50MB..."
-while IFS= read -r -d '' file; do
-    check_file_size "$file"
-    if [ $? -eq 0 ]; then
-        git add "$file"
-    else
-        echo "$file" >> .gitignore
-    fi
-done < <(find . -type f -print0)
+# # Add all changes to the Git staging area, excluding files larger than 50MB
+# echo "checking for files over 50MB..."
+# while IFS= read -r -d '' file; do
+#     check_file_size "$file"
+#     if [ $? -eq 0 ]; then
+#         git add "$file"
+#     else
+#         echo "$file" >> .gitignore
+#     fi
+# done < <(find . -type f -print0)
 
 # Commit the changes with a timestamp
 git commit -m "Committed at: $formatted_date"
