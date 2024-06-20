@@ -42,18 +42,18 @@ def send_photos(bot_token, chat_id, photo_link, local_photo_path, captions=None)
     return response.json()
 
 
-# def send_photo_from_links(bot_token, chat_id, photo_links, captions=None):
-#     url = f"https://api.telegram.org/bot{bot_token}/sendMediaGroup"
-#     media = []
+def send_photo_from_links(bot_token, chat_id, photo_links, captions=None):
+    url = f"https://api.telegram.org/bot{bot_token}/sendMediaGroup"
+    media = []
 
-#     for i, photo_link in enumerate(photo_links):
-#         media_item = {"type": "photo", "media": photo_link}
-#         if captions and i < len(captions):
-#             media_item["caption"] = captions[i]
+    for i, photo_link in enumerate(photo_links):
+        media_item = {"type": "photo", "media": photo_link}
+        if captions and i < len(captions):
+            media_item["caption"] = captions[i]
 
-#         media.append(media_item)
+        media.append(media_item)
 
-#     params = {"chat_id": chat_id, "media": media}
+    params = {"chat_id": chat_id, "media": media}
 
-#     response = requests.post(url, json=params)
-#     return response.json()
+    response = requests.post(url, json=params)
+    return response.json()
