@@ -44,7 +44,7 @@ fi
 # done < <(find . -type f -not \( -path "./venv/*" -o -path "./NONI/*" \) -print0)
 
 # Prompt user to continue
-git add .
+git add -A
 echo "Press Enter to continue..."
 read -r
 
