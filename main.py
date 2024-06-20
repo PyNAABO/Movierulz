@@ -8,7 +8,8 @@ from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
 
-if __name__ == "__main__":
+
+def main():
     try:
         MR_link = get_latest_link()
         if MR_link is None:
@@ -35,3 +36,7 @@ if __name__ == "__main__":
                 write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
         send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
+
+
+if __name__ == "__main__":
+    main()
