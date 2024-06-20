@@ -140,8 +140,10 @@ def get_movie_details_TMDB(query, url):
                 if IMDBLink == from_TMDB:
                     Checked = "✅"
                 else:
-                    Checked = "❌"
                     movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
+                    movie_details_TMDB += get_details_from_site(url)
+                    return movie_details_TMDB
+
                 movie_details_TMDB += (
                     f"Title [{Checked}]: {get_safe_value(movie_details, 'title')}\n"
                 )
