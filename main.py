@@ -1,4 +1,5 @@
 import os
+import subprocess
 from MovieRulz.get_SS import get_driver
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
@@ -9,6 +10,44 @@ from MovieRulz.TG import (
     send_photo_from_links,
 )
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
+
+
+def git_commit_and_push():
+    try:
+        # Configure Git user if not already configured
+        subprocess.run(
+            ["git", "config", "--global", "user.name", "github-actions[bot]"]
+        )
+        subprocess.run(
+            [
+                "git",
+                "config",
+                "--global",
+                "user.email",
+                "41898282+github-actions[bot]@users.noreply.github.com",
+            ]
+        )
+
+        # Add changes to the index
+        subprocess.run(["git", "add", "-A"])
+
+        # Check if there are any changes to commit
+        status = subprocess.run(["git", "diff-index", "--quiet", "HEAD"])
+        if status.returncode != 0:
+            # Commit changes with a meaningful message
+            subprocess.run(["git", "commit", "-m", "Commit message describing changes"])
+
+            # Pull latest changes from remote (optional, if needed)
+            subprocess.run(["git", "pull", "origin", "main"])
+
+            # Push changes to the remote repository
+            subprocess.run(["git", "push", "origin", "main"])
+        else:
+            print("No changes to commit.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing Git command: {e}")
+
 
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
@@ -38,6 +77,7 @@ def main():
                 MovieDetails = get_movie_details_TMDB(
                     MovieName, MovieLink, driver
                 ).strip()
+                git_commit_and_push()
                 try:
                     # send_photos(
                     #     bot_token=bot_token,
