@@ -32,7 +32,7 @@ for option in options:
     chrome_options.add_argument(option)
 
 
-def get_diver():
+def get_driver():
     driver = webdriver.Chrome(options=chrome_options)
     driver.implicitly_wait(11)
     return driver
