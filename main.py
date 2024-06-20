@@ -36,7 +36,7 @@ def main():
 
                 # Getting Movie Details
                 MovieLink = data[n][2]
-                MovieDetails = get_movie_details_TMDB(
+                MovieDetails, IMDBLink = get_movie_details_TMDB(
                     MovieName, MovieLink, driver
                 ).strip()
                 try:
@@ -52,7 +52,7 @@ def main():
                         chat_id=chat_id,
                         photo_links=[
                             data[n][1],
-                            "https://raw.githubusercontent.com/PyNAABO/Movierulz/main/Data/IMDB_Screenshot.png",
+                            f"https://api.apiflash.com/v1/urltoimage?access_key=d83b2a288254441692f89c086674d90c&wait_until=page_loaded&url={IMDBLink}",
                         ],
                         captions=[MovieDetails],
                     )

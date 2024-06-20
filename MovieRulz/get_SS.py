@@ -140,11 +140,13 @@ def send_request(link2send):
         f.write(response.content)
 
     print(f"Image saved successfully at {file_path}")
+    return "./Data/IMDB_Screenshot.png"
 
 
 def get_IMDB_Screenshot(driver, link):
     try:
-        send_request(link2send=link)
+        # file_name = send_request(link2send=link)
+        a = 1 / 0
     except:
         driver.get(link)
 

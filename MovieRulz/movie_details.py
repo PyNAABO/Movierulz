@@ -204,7 +204,7 @@ def get_movie_details_TMDB(query, url, driver):
         # movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 
     print(movie_details_TMDB)
-    return movie_details_TMDB
+    return movie_details_TMDB, IMDBLink
 
 
 if __name__ == "__main__":
