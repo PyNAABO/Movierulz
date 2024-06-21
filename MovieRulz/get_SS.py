@@ -157,7 +157,6 @@ def get_IMDB_Screenshot(driver, link):
         file_name = "./Data/IMDB_Screenshot.png"
         capture_long_screenshot(driver=driver, url=link, output_file=file_name)
         print("Screenshot Saved:", file_name)
-        git_commit_and_push()
     return file_name
 
 
