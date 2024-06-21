@@ -38,12 +38,11 @@ def main():
                     send_photos(
                         bot_token=bot_token,
                         chat_id=chat_id,
-                        photo_link=data[n][1],
-                        local_photo_path=[
+                        photo_paths=[
                             "./Data/Poster.jpg",
                             "./Data/IMDB_Screenshot.png",
                         ],
-                        captions=MovieDetails,
+                        caption=MovieDetails,
                     )
                 except Exception as e:
                     print("ERROR:", e)
