@@ -3,11 +3,7 @@ from MovieRulz.get_SS import get_driver
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
 from MovieRulz.movie_details import get_movie_details_TMDB
-from MovieRulz.TG import (
-    send_message,
-    send_photo_from_link,
-    send_photo_from_links,
-)
+from MovieRulz.TG import send_message, send_photos, send_photo_from_link
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
 
@@ -36,28 +32,19 @@ def main():
 
                 # Getting Movie Details
                 MovieLink = data[n][2]
-                MovieDetails, IMDBLink = get_movie_details_TMDB(
-                    MovieName, MovieLink, driver
-                )
+                MovieDetails = get_movie_details_TMDB(MovieName, MovieLink, driver)
                 MovieDetails = MovieDetails.strip()
                 try:
-                    # send_photos(
-                    #     bot_token=bot_token,
-                    #     chat_id=chat_id,
-                    #     photo_link=data[n][1],
-                    #     local_photo_path="./Data/IMDB_Screenshot.png",
-                    #     captions=[MovieDetails],
-                    # )
-                    # send_photo_from_links(
-                    #     bot_token=bot_token,
-                    #     chat_id=chat_id,
-                    #     photo_links=[
-                    #         data[n][1],
-                    #         f"https://api.apiflash.com/v1/urltoimage?access_key=d83b2a288254441692f89c086674d90c&wait_until=page_loaded&url={IMDBLink}",
-                    #     ],
-                    #     captions=[MovieDetails],
-                    # )
-                    a = 1 / 0
+                    send_photos(
+                        bot_token=bot_token,
+                        chat_id=chat_id,
+                        photo_link=data[n][1],
+                        local_photo_path=[
+                            "./Data/Poster.jpg",
+                            "./Data/IMDB_Screenshot.png",
+                        ],
+                        captions=MovieDetails,
+                    )
                 except Exception as e:
                     print("ERROR:", e)
                     send_photo_from_link(

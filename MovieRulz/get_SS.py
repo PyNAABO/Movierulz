@@ -145,8 +145,8 @@ def send_request(link2send):
 
 def get_IMDB_Screenshot(driver, link):
     try:
-        # file_name = send_request(link2send=link)
         a = 1 / 0
+        file_name = send_request(link2send=link)
     except:
         driver.get(link)
 
@@ -157,5 +157,18 @@ def get_IMDB_Screenshot(driver, link):
         file_name = "./Data/IMDB_Screenshot.png"
         capture_long_screenshot(driver=driver, url=link, output_file=file_name)
         print("Screenshot Saved:", file_name)
-    git_commit_and_push()
+        git_commit_and_push()
     return file_name
+
+
+def save_image_from_url(url, save_path="./Data/Poster.jpg"):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(save_path, "wb") as f:
+                f.write(response.content)
+            print(f"Image saved successfully as {save_path}")
+        else:
+            print(f"Failed to download image. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
