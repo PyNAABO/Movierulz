@@ -45,7 +45,7 @@ def capture_long_screenshot(driver, url, output_file):
         driver.get(url)
         viewport_height = driver.execute_script("return window.innerHeight")
         total_height = (
-            1717  # driver.execute_script("return document.body.scrollHeight")
+            1500  # driver.execute_script("return document.body.scrollHeight")
         )
         screenshot = Image.new(
             "RGB", (driver.execute_script("return window.innerWidth"), total_height)
