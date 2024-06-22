@@ -12,8 +12,8 @@ chat_id = "976223233"
 
 
 def main():
-    driver = get_driver()
     try:
+        driver = get_driver()
         MR_link = get_latest_link()
         if MR_link is None:
             MR_link = read_data()["link"]
@@ -35,17 +35,24 @@ def main():
                 MovieDetails = get_movie_details_TMDB(MovieName, MovieLink, driver)
                 MovieDetails = MovieDetails.strip()
                 try:
-                    send_photos(
+                    resp = send_photos(
                         bot_token=bot_token,
                         chat_id=chat_id,
-                        photo_paths=[
+                        images=[
                             "./Data/Poster.jpg",
                             "./Data/IMDB_Screenshot.png",
                         ],
                         caption=MovieDetails,
                     )
+                    if resp["ok"]:
+                        print("Done ✅ -", MovieName)
+                    else:
+                        print(resp)
+                        raise "🔴 Sending Local Images to Telegram Failed!! 🔴"
                 except Exception as e:
-                    print("ERROR:", e)
+                    send_message(
+                        bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
+                    )
                     send_photo_from_link(
                         bot_token=bot_token,
                         chat_id=chat_id,

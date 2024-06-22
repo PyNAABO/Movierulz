@@ -1,11 +1,10 @@
 import io
 import os
 import time
-import subprocess
 import requests
+from PIL import Image
 from datetime import datetime
 
-from PIL import Image
 from selenium import webdriver
 import chromedriver_autoinstaller
 from pyvirtualdisplay import Display
@@ -65,43 +64,6 @@ def capture_long_screenshot(driver, url, output_file):
         print("ERROR:", e)
 
 
-def git_commit_and_push():
-    try:
-        # Configure Git user if not already configured
-        subprocess.run(
-            ["git", "config", "--global", "user.name", "github-actions[bot]"]
-        )
-        subprocess.run(
-            [
-                "git",
-                "config",
-                "--global",
-                "user.email",
-                "41898282+github-actions[bot]@users.noreply.github.com",
-            ]
-        )
-
-        # Add changes to the index
-        subprocess.run(["git", "add", "-A"])
-
-        # Check if there are any changes to commit
-        status = subprocess.run(["git", "diff-index", "--quiet", "HEAD"])
-        if status.returncode != 0:
-            # Commit changes with a meaningful message
-            subprocess.run(["git", "commit", "-m", "Commit message describing changes"])
-
-            # Pull latest changes from remote (optional, if needed)
-            subprocess.run(["git", "pull", "origin", "main"])
-
-            # Push changes to the remote repository
-            subprocess.run(["git", "push", "origin", "main"])
-        else:
-            print("No changes to commit.")
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing Git command: {e}")
-
-
 def send_request(link2send):
     # API endpoint URL with parameters
     url = "https://api.screenshotone.com/take"
@@ -144,19 +106,15 @@ def send_request(link2send):
 
 
 def get_IMDB_Screenshot(driver, link):
-    try:
-        a = 1 / 0
-        file_name = send_request(link2send=link)
-    except:
-        driver.get(link)
+    driver.get(link)
 
-        with open("./LOGS.txt", "a+") as f:
-            string = f"Screenshot Taken : {driver.title} : {str(datetime.now())}"
-            f.write(string + "\n")
+    with open("./LOGS.txt", "a+") as f:
+        string = f"Screenshot Taken : {driver.title} : {str(datetime.now())}"
+        f.write(string + "\n")
 
-        file_name = "./Data/IMDB_Screenshot.png"
-        capture_long_screenshot(driver=driver, url=link, output_file=file_name)
-        print("Screenshot Saved:", file_name)
+    file_name = "./Data/IMDB_Screenshot.png"
+    capture_long_screenshot(driver=driver, url=link, output_file=file_name)
+    print("Screenshot Saved:", file_name)
     return file_name
 
 
