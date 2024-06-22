@@ -3,15 +3,6 @@ from bs4 import BeautifulSoup
 
 
 def scrape_movie_data(url):
-    """
-    Scrape movie data from the given URL.
-
-    Args:
-    - url (str): The URL of the webpage to scrape.
-
-    Returns:
-    - list: A list of tuples containing movie titles, image URLs, and links.
-    """
     # Fetch the HTML content of the webpage
     response = requests.get(url)
     html_content = response.content

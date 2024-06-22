@@ -1,5 +1,5 @@
 import os
-from MovieRulz.get_SS import get_driver
+from MovieRulz.get_SS import get_driver, save_image_from_url
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
 from MovieRulz.movie_details import get_movie_details_TMDB
@@ -32,8 +32,11 @@ def main():
 
                 # Getting Movie Details
                 MovieLink = data[n][2]
-                MovieDetails = get_movie_details_TMDB(MovieName, MovieLink, driver)
-                MovieDetails = MovieDetails.strip()
+                MovieImageLink = data[n][1]
+                MovieDetails = get_movie_details_TMDB(
+                    MovieName, MovieLink, driver
+                ).strip()
+                save_image_from_url(url=MovieImageLink)
                 try:
                     resp = send_photos(
                         bot_token=bot_token,
@@ -56,7 +59,7 @@ def main():
                     send_photo_from_link(
                         bot_token=bot_token,
                         chat_id=chat_id,
-                        photo_link=data[n][1],
+                        photo_link=MovieImageLink,
                         caption=MovieDetails,
                     )
                 write_movie_data((data[n][0], data[n][1], data[n][2]))

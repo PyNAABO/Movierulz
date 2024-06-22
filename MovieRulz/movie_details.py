@@ -71,7 +71,6 @@ def get_IMDB_link(query):
                 Links.append(link)
 
         link = Links[0] if Links else None
-        print(link)
         return link
     except Exception as e:
         print("Error fetching latest link:", e)
@@ -203,7 +202,6 @@ def get_movie_details_TMDB(query, url, driver):
         movie_details_TMDB += get_details_from_site(url)
         # movie_details_TMDB += f"Search request failed: {response.status_code}\n"
 
-    print(movie_details_TMDB)
     return movie_details_TMDB
 
 

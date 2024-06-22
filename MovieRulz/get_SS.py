@@ -114,7 +114,6 @@ def get_IMDB_Screenshot(driver, link):
 
     file_name = "./Data/IMDB_Screenshot.png"
     capture_long_screenshot(driver=driver, url=link, output_file=file_name)
-    print("Screenshot Saved:", file_name)
     return file_name
 
 
@@ -124,7 +123,6 @@ def save_image_from_url(url, save_path="./Data/Poster.jpg"):
         if response.status_code == 200:
             with open(save_path, "wb") as f:
                 f.write(response.content)
-            print(f"Image saved successfully as {save_path}")
         else:
             print(f"Failed to download image. Status code: {response.status_code}")
     except Exception as e:
