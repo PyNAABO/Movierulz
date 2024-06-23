@@ -27,26 +27,30 @@ fi
 
 # # Add all changes to the Git staging area, excluding files larger than 50MB
 # echo "Checking for files over 50MB..."
+# declare -a files_to_add
 # while IFS= read -r -d '' file; do
-#     # Check if the file path contains 'venv' or 'NONI'; if so, skip processing
-#     if [[ "$file" == *"/venv/"* || "$file" == *"/NONI/"* ]]; then
-#         echo "Skipping folder: $file"
-#         continue
-#     fi
-    
 #     check_file_size "$file"
 #     if [ $? -eq 0 ]; then
-#         echo "Adding file: $file"
-#         git add "$file"
+#         files_to_add+=("$file")
 #     else
 #         echo "$file" >> .gitignore
 #     fi
 # done < <(find . -type f -not \( -path "./venv/*" -o -path "./NONI/*" \) -print0)
 
-# Prompt user to continue
+# # Add the files to the git staging area in a single command
+# if [ ${#files_to_add[@]} -ne 0 ]; then
+#     echo "Adding files: ${files_to_add[@]}"
+#     git add "${files_to_add[@]}"
+# else
+#     echo "No files to add."
+# fi
+
+
+# # Prompt user to confirm commit
 git add -A
-echo "Press Enter to continue..."
-read -r
+# echo "Press Enter to continue..."
+# read -r
+read -r -p "Are you sure you want to commit these changes? (y/N) " confirmation
 
 # Commit the changes with a timestamp
 git commit -m "Committed at: $formatted_date"
