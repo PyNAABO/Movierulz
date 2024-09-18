@@ -37,6 +37,6 @@ def scrape_movie_data(url):
 
 # Example usage:
 if __name__ == "__main__":
-    url = "https://ww2.5movierulz.beer/quality/hdrip/"
+    url = "https://www.5movierulz.skin/quality/hdrip/"
     movie_data = scrape_movie_data(url)
     print(movie_data)

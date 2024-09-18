@@ -11,6 +11,13 @@ bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
 
 
+def maintain_data_limit():
+    data = read_movie_data()
+    if len(data) > 25:
+        data.pop()
+        write_movie_data(data)
+
+
 def main():
     try:
         driver = get_driver()
@@ -36,33 +43,34 @@ def main():
                 MovieDetails = get_movie_details_TMDB(
                     MovieName, MovieLink, driver
                 ).strip()
-                save_image_from_url(url=MovieImageLink)
-                try:
-                    resp = send_photos(
-                        bot_token=bot_token,
-                        chat_id=chat_id,
-                        images=[
-                            "./Data/Poster.jpg",
-                            "./Data/IMDB_Screenshot.png",
-                        ],
-                        caption=MovieDetails,
-                    )
-                    if resp["ok"]:
-                        print("Done ✅ -", MovieName)
-                    else:
-                        print(resp)
-                        raise "🔴 Sending Local Images to Telegram Failed!! 🔴"
-                except Exception as e:
-                    send_message(
-                        bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
-                    )
-                    send_photo_from_link(
-                        bot_token=bot_token,
-                        chat_id=chat_id,
-                        photo_link=MovieImageLink,
-                        caption=MovieDetails,
-                    )
-                write_movie_data((data[n][0], data[n][1], data[n][2]))
+                if MovieDetails != "Adult":
+                    save_image_from_url(url=MovieImageLink)
+                    try:
+                        resp = send_photos(
+                            bot_token=bot_token,
+                            chat_id=chat_id,
+                            images=[
+                                "./Data/Poster.jpg",
+                                "./Data/IMDB_Screenshot.png",
+                            ],
+                            caption=MovieDetails,
+                        )
+                        if resp["ok"]:
+                            print("Done ✅ -", MovieName)
+                        else:
+                            print(resp)
+                            raise "🔴 Sending Local Images to Telegram Failed!! 🔴"
+                    except Exception as e:
+                        send_message(
+                            bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
+                        )
+                        send_photo_from_link(
+                            bot_token=bot_token,
+                            chat_id=chat_id,
+                            photo_link=MovieImageLink,
+                            caption=MovieDetails,
+                        )
+                    write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
         send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
     finally:

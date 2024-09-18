@@ -79,14 +79,18 @@ def get_IMDB_link(query):
 
 # Function to get movie details by name
 def get_movie_details_TMDB(query, url, driver):
+    # Checking for Adult content
+    checked_info = get_details_from_site(url).strip()
+    if "Genres: Adult" in checked_info:
+        return "Adult"
+
     # Initialize movie details variable
     movie_details_TMDB = ""
-
     movie_details_TMDB += f"{query}\n\n"
     IMDBLink = get_IMDB_link(query)
     movie_details_TMDB += f"IMDB Link: {IMDBLink}\n\n"
 
     # Grabing SS from IMDB
     get_IMDB_Screenshot(driver=driver, link=IMDBLink)
-    movie_details_TMDB += get_details_from_site(url)
+    movie_details_TMDB += checked_info
     return movie_details_TMDB
