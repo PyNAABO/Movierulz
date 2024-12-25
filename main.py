@@ -17,6 +17,7 @@ logging.basicConfig(
 
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
+send_message(bot_token, chat_id, text=f"🟢🟢 Bot Started 🟢🟢")
 
 
 def maintain_data_limit():
@@ -27,73 +28,71 @@ def maintain_data_limit():
 
 
 def main():
-    try:
-        logging.info("Starting main function")
-        driver = get_driver()
-        MR_link = get_latest_link()
-        if MR_link is None:
-            MR_link = read_data()["link"]
-        sent_data = read_movie_data()
-        data = scrape_movie_data(url=MR_link)
-        titles = [item[0] for item in data]
-        sent_titles = [movie[0] for movie in sent_data]
-        n = -1
-        for title in titles:
-            n += 1
-            if title not in sent_titles:
-                MovieName = data[n][0]
+    # try:
+    logging.info("Starting main function")
+    driver = get_driver()
+    MR_link = get_latest_link()
+    if MR_link is None:
+        MR_link = read_data()["link"]
+    sent_data = read_movie_data()
+    data = scrape_movie_data(url=MR_link)
+    titles = [item[0] for item in data]
+    sent_titles = [movie[0] for movie in sent_data]
+    n = -1
+    for title in titles:
+        n += 1
+        if title not in sent_titles:
+            MovieName = data[n][0]
 
-                # Refining name
-                MovieName = f"{MovieName.rsplit(')')[0]})"
+            # Refining name
+            MovieName = f"{MovieName.rsplit(')')[0]})"
 
-                # Getting Movie Details
-                MovieLink = data[n][2]
-                MovieImageLink = data[n][1]
-                MovieDetails = get_movie_details_TMDB(
-                    MovieName, MovieLink, driver
-                ).strip()
-                if MovieDetails != "Adult":
-                    save_image_from_url(url=MovieImageLink)
-                    try:
-                        resp = send_photos(
-                            bot_token=bot_token,
-                            chat_id=chat_id,
-                            images=[
-                                "./Data/Poster.jpg",
-                                "./Data/IMDB_Screenshot.png",
-                            ],
-                            caption=MovieDetails,
+            # Getting Movie Details
+            MovieLink = data[n][2]
+            MovieImageLink = data[n][1]
+            MovieDetails = get_movie_details_TMDB(MovieName, MovieLink, driver).strip()
+            if MovieDetails != "Adult":
+                save_image_from_url(url=MovieImageLink)
+                try:
+                    resp = send_photos(
+                        bot_token=bot_token,
+                        chat_id=chat_id,
+                        images=[
+                            "./Data/Poster.jpg",
+                            "./Data/IMDB_Screenshot.png",
+                        ],
+                        caption=MovieDetails,
+                    )
+                    if resp["ok"]:
+                        logging.info(f"Done ✅ - {MovieName}")
+                    else:
+                        logging.error(
+                            f"Sending Local Images to Telegram Failed!! {resp}"
                         )
-                        if resp["ok"]:
-                            logging.info(f"Done ✅ - {MovieName}")
-                        else:
-                            logging.error(
-                                f"Sending Local Images to Telegram Failed!! {resp}"
-                            )
-                            raise Exception(
-                                "🔴 Sending Local Images to Telegram Failed!! 🔴"
-                            )
-                    except Exception as e:
-                        logging.error(f"Error Occurred: {e}")
-                        send_message(
-                            bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
+                        raise Exception(
+                            "🔴 Sending Local Images to Telegram Failed!! 🔴"
                         )
-                        send_photo_from_link(
-                            bot_token=bot_token,
-                            chat_id=chat_id,
-                            photo_link=MovieImageLink,
-                            caption=MovieDetails,
-                        )
-                    write_movie_data((data[n][0], data[n][1], data[n][2]))
-    except Exception as e:
-        logging.error(f"Exception in main: {e}")
-        send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
-    finally:
-        driver.quit()
-        logging.info("Driver quit successfully")
-    with open("logs_main.txt", "r") as f:
-        logs = f.read()
-        print(logs)
+                except Exception as e:
+                    logging.error(f"Error Occurred: {e}")
+                    send_message(
+                        bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
+                    )
+                    send_photo_from_link(
+                        bot_token=bot_token,
+                        chat_id=chat_id,
+                        photo_link=MovieImageLink,
+                        caption=MovieDetails,
+                    )
+                write_movie_data((data[n][0], data[n][1], data[n][2]))
+    # except Exception as e:
+    #     logging.error(f"Exception in main: {e}")
+    #     send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
+    # finally:
+    driver.quit()
+    logging.info("Driver quit successfully")
+    # with open("logs_main.txt", "r") as f:
+    #     logs = f.read()
+    #     print(logs)
 
 
 if __name__ == "__main__":
