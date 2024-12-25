@@ -8,6 +8,7 @@ from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
 
 bot_token = os.environ["BOT_TOKEN"]
+print(bot_token)
 chat_id = "976223233"
 
 
