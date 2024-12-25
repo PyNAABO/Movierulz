@@ -72,6 +72,7 @@ def main():
                         )
                     write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
+        print("error", e)
         send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
     finally:
         driver.quit()
