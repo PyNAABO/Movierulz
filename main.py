@@ -12,17 +12,19 @@ logging.basicConfig(
     filename="logs_main.txt",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
+    level=logging.INFO,
 )
 
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
+
 
 def maintain_data_limit():
     data = read_movie_data()
     if len(data) > 25:
         data.pop()
         write_movie_data(data)
+
 
 def main():
     try:
@@ -65,8 +67,12 @@ def main():
                         if resp["ok"]:
                             logging.info(f"Done ✅ - {MovieName}")
                         else:
-                            logging.error(f"Sending Local Images to Telegram Failed!! {resp}")
-                            raise Exception("🔴 Sending Local Images to Telegram Failed!! 🔴")
+                            logging.error(
+                                f"Sending Local Images to Telegram Failed!! {resp}"
+                            )
+                            raise Exception(
+                                "🔴 Sending Local Images to Telegram Failed!! 🔴"
+                            )
                     except Exception as e:
                         logging.error(f"Error Occurred: {e}")
                         send_message(
@@ -85,6 +91,10 @@ def main():
     finally:
         driver.quit()
         logging.info("Driver quit successfully")
+    with open("logs_main.txt", "r") as f:
+        logs = f.read()
+        print(logs)
+
 
 if __name__ == "__main__":
     main()
