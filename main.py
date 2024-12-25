@@ -1,16 +1,22 @@
 import os
-from MovieRulz.get_SS import get_driver, save_image_from_url
+import logging
 from MovieRulz.get_LL import get_latest_link
 from MovieRulz.scrape import scrape_movie_data
 from MovieRulz.movie_details import get_movie_details_TMDB
+from MovieRulz.get_SS import get_driver, save_image_from_url
 from MovieRulz.TG import send_message, send_photos, send_photo_from_link
 from MovieRulz.utils import read_data, read_movie_data, write_movie_data
 
+# Configure logging
+logging.basicConfig(
+    filename="logs_main.txt",
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 bot_token = os.environ["BOT_TOKEN"]
 chat_id = "976223233"
-print(chat_id)
-
 
 def maintain_data_limit():
     data = read_movie_data()
@@ -18,9 +24,9 @@ def maintain_data_limit():
         data.pop()
         write_movie_data(data)
 
-
 def main():
     try:
+        logging.info("Starting main function")
         driver = get_driver()
         MR_link = get_latest_link()
         if MR_link is None:
@@ -57,11 +63,12 @@ def main():
                             caption=MovieDetails,
                         )
                         if resp["ok"]:
-                            print("Done ✅ -", MovieName)
+                            logging.info(f"Done ✅ - {MovieName}")
                         else:
-                            print(resp)
-                            raise "🔴 Sending Local Images to Telegram Failed!! 🔴"
+                            logging.error(f"Sending Local Images to Telegram Failed!! {resp}")
+                            raise Exception("🔴 Sending Local Images to Telegram Failed!! 🔴")
                     except Exception as e:
+                        logging.error(f"Error Occurred: {e}")
                         send_message(
                             bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}"
                         )
@@ -73,11 +80,11 @@ def main():
                         )
                     write_movie_data((data[n][0], data[n][1], data[n][2]))
     except Exception as e:
-        print("error", e)
+        logging.error(f"Exception in main: {e}")
         send_message(bot_token, chat_id, text=f"🔴🔴 Error Occurred 🔴🔴:\n\n{e}")
     finally:
         driver.quit()
-
+        logging.info("Driver quit successfully")
 
 if __name__ == "__main__":
     main()
