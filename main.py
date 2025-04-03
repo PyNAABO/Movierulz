@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 bot_token = os.environ["BOT_TOKEN"]
-chat_id = "976223233"
+chat_id = os.environ["CHAT_ID"]
 send_message(bot_token, chat_id, text=f"🟢🟢 Bot Started 🟢🟢")
 
 
